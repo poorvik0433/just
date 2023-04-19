@@ -29,32 +29,20 @@ class APIManager {
 
   List<UserModel> userList = [];
 
-  Future<List<UserModel>> getCall() async {
-    const String url = getApi;
-    final response = await http.get(
-      Uri.parse(url),
-    );
-    var data = jsonDecode(response.body.toString());
-    if (response.statusCode == 200) {
-      for (Map<String, dynamic> i in data) {
-        print(i['id']);
-        print(i['name']);
-        print(i['email']);
-        userList.add(UserModel.fromJson(i));
-      }
-      return userList;
-    } else {
-      throw Exception('Failed to load data from API');
-    }
+  Future getProductData() async {
+    var res = await getCall(getApi);
+    return jsonDecode(res);
+  }
+
+  Future getCall(String url) async {
+    http.Response response = await http.Client()
+        .get(Uri.parse(url))
+        .timeout(const Duration(seconds: 120));
+    return response.body;
   }
 
   void postData(String email, String name) async {
     String result = await postCall(email, name);
-    return Logger.log(result);
-  }
-
-  getData() async {
-    List<UserModel> result = await getCall();
-    return result;
+    Logger.log(result);
   }
 }

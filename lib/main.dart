@@ -33,11 +33,14 @@ class _PostAPIState extends State<PostAPI> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    UserResponse();
+    userResponse();
   }
 
-  void UserResponse() async {
-    apiResponse = await APIManager.API.getData();
+  void userResponse() async {
+    APIManager.API.getProductData().then((response) {
+      log("Response");
+      log(response.toString());
+    }).catchError((er) {});
   }
 
   Widget build(BuildContext context) {
@@ -96,7 +99,7 @@ class _PostAPIState extends State<PostAPI> {
                 ElevatedButton(
                     onPressed: () async {
                       setState(() {
-                        UserResponse();
+                        userResponse();
                       });
                     },
                     child: Text("GET API")),
@@ -113,31 +116,30 @@ class _PostAPIState extends State<PostAPI> {
                 ),
               ],
             ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 20),
-                child: Container(
-                  width: 400,
-                  decoration: BoxDecoration(
-                    border: Border.all(width: 1),
-                  ),
-
-                  child: Expanded(
-                    child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: apiResponse.length,
-                        itemBuilder: (context, index) {
-                          return Column(
-                            children: [
-                              Text(apiResponse[index].name.toString()),
-                              Text(apiResponse[index].email.toString()),
-                              Text(apiResponse[index].address!.city.toString()),
-                            ],
-                          );
-                        }),
-                  ),
-                  // child: Text(apiResponse),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 20),
+              child: Container(
+                width: 400,
+                decoration: BoxDecoration(
+                  border: Border.all(width: 1),
                 ),
+
+                child: Expanded(
+                  child: ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: apiResponse.length,
+                      itemBuilder: (context, index) {
+                        return Column(
+                          children: [
+                            Text(apiResponse[index].name.toString()),
+                            Text(apiResponse[index].email.toString()),
+                            Text(apiResponse[index].address!.city.toString()),
+                          ],
+                        );
+                      }),
+                ),
+                // child: Text(apiResponse),
               ),
             ),
           ],
