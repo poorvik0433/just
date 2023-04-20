@@ -27,22 +27,20 @@ class APIManager {
     return response.body;
   }
 
-  List<UserModel> userList = [];
-
-  Future getProductData() async {
-    var res = await getCall(getApi);
-    return jsonDecode(res);
+  void postData(String email, String name) async {
+    String result = await postCall(email, name);
+    Logger.log(result);
   }
 
   Future getCall(String url) async {
     http.Response response = await http.Client()
         .get(Uri.parse(url))
-        .timeout(const Duration(seconds: 120));
+        .timeout(const Duration(seconds: 10));
     return response.body;
   }
 
-  void postData(String email, String name) async {
-    String result = await postCall(email, name);
-    Logger.log(result);
+  Future getProductData() async {
+    var res = await getCall(getApi);
+    return jsonDecode(res);
   }
 }

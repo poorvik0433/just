@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:just/logger.dart';
 import 'package:just/user_module.dart';
 import 'api_manager.dart';
 
@@ -25,24 +26,28 @@ class PostAPI extends StatefulWidget {
 }
 
 class _PostAPIState extends State<PostAPI> {
+  @override
+  void initState() {
+    userResponse();
+    super.initState();
+  }
+
   TextEditingController myEmailController = TextEditingController();
   TextEditingController myNameController = TextEditingController();
   List<UserModel> apiResponse = [];
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    userResponse();
-  }
-
-  void userResponse() async {
+  Future<void> userResponse() async {
     APIManager.API.getProductData().then((response) {
-      log("Response");
-      log(response.toString());
+      if (true) {
+        var data = response;
+        for (Map<String, dynamic> i in data) {
+          apiResponse.add(UserModel.fromJson(i));
+        }
+      }
     }).catchError((er) {});
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: Text('API calls')),
@@ -97,10 +102,9 @@ class _PostAPIState extends State<PostAPI> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
-                    onPressed: () async {
-                      setState(() {
-                        userResponse();
-                      });
+                    onPressed: () {
+                      userResponse();
+                      setState(() {});
                     },
                     child: Text("GET API")),
                 SizedBox(
@@ -108,9 +112,8 @@ class _PostAPIState extends State<PostAPI> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    setState(() {
-                      // apiResponse =  ";
-                    });
+                    apiResponse = [];
+                    setState(() {});
                   },
                   child: Text("Clear"),
                 ),
@@ -120,26 +123,30 @@ class _PostAPIState extends State<PostAPI> {
               padding: const EdgeInsets.only(bottom: 20),
               child: Container(
                 width: 400,
+                height: 400,
                 decoration: BoxDecoration(
                   border: Border.all(width: 1),
                 ),
-
                 child: Expanded(
-                  child: ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: apiResponse.length,
-                      itemBuilder: (context, index) {
-                        return Column(
-                          children: [
-                            Text(apiResponse[index].name.toString()),
-                            Text(apiResponse[index].email.toString()),
-                            Text(apiResponse[index].address!.city.toString()),
-                          ],
-                        );
-                      }),
+                  child: apiResponse.isEmpty
+                      ? Center(child: Text("Click Get API Button"))
+                      : ListView.builder(
+                          itemCount: apiResponse.length,
+                          itemBuilder: (context, index) {
+                            return Column(
+                              children: [
+                                Text(apiResponse[index].name.toString()),
+                                Text(apiResponse[index].email.toString()),
+                                Text(apiResponse[index]
+                                    .address!
+                                    .city
+                                    .toString()),
+                                Text(
+                                    "------------------------------------------------------------------"),
+                              ],
+                            );
+                          }),
                 ),
-                // child: Text(apiResponse),
               ),
             ),
           ],
