@@ -5,14 +5,14 @@ import 'package:just/logger.dart';
 import 'package:just/user_module.dart';
 import 'api_manager.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: PostAPI(),
     );
   }
@@ -39,6 +39,7 @@ class _PostAPIState extends State<PostAPI> {
   Future<void> userResponse() async {
     APIManager.API.getProductData().then((response) {
       if (true) {
+        print(response);
         var data = response;
         for (Map<String, dynamic> i in data) {
           apiResponse.add(UserModel.fromJson(i));
@@ -50,10 +51,10 @@ class _PostAPIState extends State<PostAPI> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text('API calls')),
+        appBar: AppBar(title: const Text('API calls')),
         body: Column(
           children: [
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
             Container(
@@ -68,7 +69,7 @@ class _PostAPIState extends State<PostAPI> {
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
             Container(
@@ -76,14 +77,14 @@ class _PostAPIState extends State<PostAPI> {
               width: 400,
               child: TextField(
                 controller: myNameController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'Enter your name',
                   labelText: 'Name',
                   border: OutlineInputBorder(),
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
             Center(
@@ -92,10 +93,10 @@ class _PostAPIState extends State<PostAPI> {
                   APIManager.API
                       .postData(myEmailController.text, myNameController.text);
                 },
-                child: Text("Display"),
+                child: const Text("Display"),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Row(
@@ -106,8 +107,8 @@ class _PostAPIState extends State<PostAPI> {
                       userResponse();
                       setState(() {});
                     },
-                    child: Text("GET API")),
-                SizedBox(
+                    child: const Text("GET API")),
+                const SizedBox(
                   height: 50,
                 ),
                 ElevatedButton(
@@ -115,7 +116,7 @@ class _PostAPIState extends State<PostAPI> {
                     apiResponse = [];
                     setState(() {});
                   },
-                  child: Text("Clear"),
+                  child: const Text("Clear"),
                 ),
               ],
             ),
@@ -129,7 +130,7 @@ class _PostAPIState extends State<PostAPI> {
                 ),
                 child: Expanded(
                   child: apiResponse.isEmpty
-                      ? Center(child: Text("Click Get API Button"))
+                      ? const Center(child: Text("Click Get API Button"))
                       : ListView.builder(
                           itemCount: apiResponse.length,
                           itemBuilder: (context, index) {
@@ -141,7 +142,7 @@ class _PostAPIState extends State<PostAPI> {
                                     .address!
                                     .city
                                     .toString()),
-                                Text(
+                                const Text(
                                     "------------------------------------------------------------------"),
                               ],
                             );
